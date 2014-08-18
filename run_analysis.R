@@ -20,7 +20,7 @@ run_analysis <- function(x) {
   print("Reading training data...")
   subjectPerSample <- read.table("train/subject_train.txt")
   activityPerSample <- read.table("train/y_train.txt")
-  samples <- read.table("train/x_train.txt")
+  samples <- read.table(colClasses="numeric", "train/x_train.txt")
   stopifnot(nrow(subjectPerSample) == nrow(activityPerSample == nrow(samples)))
   
   # Read feature labels
@@ -34,9 +34,11 @@ run_analysis <- function(x) {
   print("Reading test data...")
   subjectPerSampleTest <- read.table("test/subject_test.txt")
   activityPerSampleTest <- read.table("test/y_test.txt")
-  samplesTest <- read.table("test/x_test.txt")
+  samplesTest <- read.table(colClasses="numeric", "test/x_test.txt")
   stopifnot(nrow(subjectPerSampleTest) == nrow(activityPerSampleTest == nrow(samplesTest)))
   print("Now to assign featureLabels as test samples column names")
   colnames(samplesTest) <- featureLabels[,2]
-  head(samplesTest)
+  
+  # Merge training and test data sets
+  samplesMerged <- rbind(samples, samplesTest)
 }
