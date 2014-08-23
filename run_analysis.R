@@ -2,9 +2,6 @@
 ##
 ##  Original: 8/10/2014 Bob Uva
 ##
-##  Prerequisites:
-##    Uses the fBasics package. Make sure that package is installed and available.
-##
 ## 1. Merges the training and the test sets to create one data set.
 ## 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 ## 3. Uses descriptive activity names to name the activities in the data set
@@ -73,5 +70,3 @@ run_analysis <- function(x) {
   # Create a tidy data set that contains
   #   1. the average of each variable for each activity and subject.
 }
-
-library
