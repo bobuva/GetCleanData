@@ -17,7 +17,7 @@ run_analysis <- function(x) {
   setwd("C:/DSCoursera/GettingAndCleaningData/Project/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
 
   # Read feature labels
-  print("1. Reading Feature Labels...")
+  print("Reading Feature Labels...")
   featureLabels <- read.table("features.txt", row.names=NULL)
   
   # Find the feature column indices where the data is a mean.  
@@ -75,7 +75,7 @@ run_analysis <- function(x) {
   ############################################
   
   # Read training data
-  print("2. Reading training data...")
+  print("Reading training data...")
   subjectPerSampleTrain <- read.table("train/subject_train.txt", row.names=NULL)
   activityPerSampleTrain <- read.table("train/y_train.txt", row.names=NULL)
 
@@ -108,7 +108,7 @@ run_analysis <- function(x) {
   ############################################
 
   # Read test data
-  print("3. Reading test data...")
+  print("Reading test data...")
   subjectPerSampleTest <- read.table("test/subject_test.txt", row.names=NULL)
   activityPerSampleTest <- read.table("test/y_test.txt", row.names=NULL)
   samplesTest <- read.table(colClasses="numeric", "test/x_test.txt", row.names=NULL)
@@ -135,22 +135,44 @@ run_analysis <- function(x) {
   ############################################
   
   # Merge training and test data sets
-  print("4. Merging training and test data sets...")
+  print("Merging training and test data sets...")
   samplesMerged <- rbind(samplesTrain, samplesTest)
 
+  write.table(samplesMerged, "dataSet.txt", row.names=FALSE)
   # Replace Activity identifiers with descriptive names.
-  print("5. Use descriptive activity names")
-  samplesMerged$Activity <- lapply(samplesMerged$Activity,
-      function(n) { 
-        switch(n, activityLabels[1,2], activityLabels[2,2], 
-                activityLabels[3,2], activityLabels[4,2],
-                activityLabels[5,2]) 
-      })
+  print("Use descriptive activity names")
   
+  tempAct <- character()
+  
+  for(n in samplesMerged$Activity) {
+    tempAct <- tempAct + getActivityName(n, activityLabels)
+  }
+  
+  samplesMerged$Activity <- NULL
+  
+  samplesMerged$Activity <- tempAct
+    
   ############################################
   
+  print("Creating tidy data set showing averages of each variable for each subject and activity")
   # Create a tidy data set that contains the average of each variable
   # for each activity and subject.
+
+  #acts <- samplesMerged$Activity
+  #acts <- unlist(acts)
   
   
+#  samplesMelt <- melt(samplesMerged, id = c("Subject", "Activity"))
+#  dcastSet <- dcast(samplesMelt, Subject + Activity  ~ variable)
+#  head(dcastSet)
+  
+}
+
+getActivityName <- function(id, activityLabels) {
+  switch(id, activityLabels[1,2], 
+                        activityLabels[2,2], 
+                        activityLabels[3,2], 
+                        activityLabels[4,2],
+                        activityLabels[5,2]) 
+
 }
